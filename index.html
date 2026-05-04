@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIA — Articulatory Rig-Independent Animation Metric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f14;
+  --bg2: #13151f;
+  --bg3: #1a1d2e;
+  --surface: #1f2235;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8e9ef;
+  --muted: #7e8299;
+  --dim: #4a4e6a;
+  --teal: #2dd4bf;
+  --teal2: #0f9f8a;
+  --teal-dim: rgba(45,212,191,0.12);
+  --amber: #f5a623;
+  --amber2: #d4841a;
+  --amber-dim: rgba(245,166,35,0.12);
+  --coral: #f06060;
+  --coral-dim: rgba(240,96,96,0.10);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.10);
+  --blue: #60a5fa;
+  --blue-dim: rgba(96,165,250,0.10);
+  --green: #4ade80;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --serif: 'DM Serif Display', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 5rem 0 3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  border: 1px solid var(--teal2);
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-bottom: 1.5rem;
+  background: var(--teal-dim);
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: 72px;
+  line-height: 1.0;
+  letter-spacing: -1px;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-desc {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 720px;
+  line-height: 1.8;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.stat-item { display: flex; flex-direction: column; gap: 2px; }
+.stat-val {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--teal);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── SECTION ─── */
+.section {
+  margin-bottom: 4.5rem;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+p {
+  color: var(--muted);
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+strong { color: var(--text); font-weight: 500; }
+
+/* ─── CONCEPT BOX ─── */
+.concept-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.concept-box.teal { border-left: 3px solid var(--teal); }
+.concept-box.amber { border-left: 3px solid var(--amber); }
+.concept-box.purple { border-left: 3px solid var(--purple); }
+.concept-box.coral { border-left: 3px solid var(--coral); }
+
+/* ─── ARCHITECTURE DIAGRAM ─── */
+.diagram-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+/* ─── CHANNEL GROUPS ─── */
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.group-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+}
+
+.group-card.ga { border-top: 2px solid var(--amber); }
+.group-card.gb { border-top: 2px solid var(--teal); }
+.group-card.gc { border-top: 2px solid var(--purple); }
+.group-card.gd { border-top: 2px solid var(--blue); }
+.group-card.ge { border-top: 2px solid var(--coral); }
+.group-card.gf { border-top: 2px solid var(--green); }
+.group-card.gg { border-top: 2px solid var(--dim); }
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.group-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.group-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg3);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.channel-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.channel-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ch-id {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  min-width: 24px;
+}
+
+.ch-name { color: var(--muted); }
+.ch-range {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  margin-left: auto;
+}
+
+/* ─── FULL CHANNEL TABLE ─── */
+.channel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 2rem;
+}
+
+.channel-table th {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--bg2);
+}
+
+.channel-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.channel-table tr:hover td { background: var(--bg3); }
+
+.td-id { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.td-name { color: var(--text); font-weight: 400; }
+.td-range { font-family: var(--mono); font-size: 11px; color: var(--teal); white-space: nowrap; }
+.td-type { font-size: 11px; }
+.td-desc { color: var(--muted); font-size: 12px; }
+.td-ipa { font-family: var(--mono); font-size: 11px; color: var(--amber); }
+
+.group-row td {
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 11px;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.tag.linear { background: var(--teal-dim); color: var(--teal); }
+.tag.nonlinear { background: var(--amber-dim); color: var(--amber); }
+.tag.binary { background: var(--purple-dim); color: var(--purple); }
+.tag.bipolar { background: var(--coral-dim); color: var(--coral); }
+
+/* ─── PIPELINE ─── */
+.pipeline-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.pipeline-header {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── PHONEME EXAMPLES ─── */
+.phoneme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.phoneme-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.phoneme-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.phoneme-glyph {
+  font-family: var(--serif);
+  font-size: 40px;
+  color: #fff;
+  line-height: 1;
+}
+
+.phoneme-meta { display: flex; flex-direction: column; gap: 2px; }
+.phoneme-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.phoneme-desc { font-size: 11px; color: var(--muted); }
+
+.phoneme-body { padding: 1rem 1.25rem; }
+
+.channel-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.bar-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  min-width: 32px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.bar-val {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ─── COMPARISON TABLE ─── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 2rem;
+}
+
+.compare-table th {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border2);
+  text-align: center;
+  background: var(--bg2);
+}
+
+.compare-table th:first-child { text-align: left; }
+
+.compare-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  vertical-align: top;
+}
+
+.compare-table td:first-child {
+  text-align: left;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.compare-table tr:hover td { background: var(--bg3); }
+
+.col-aria { background: var(--teal-dim) !important; color: var(--teal) !important; }
+.col-aria-h { background: var(--teal-dim); color: var(--teal) !important; }
+
+.check { color: var(--green); }
+.cross { color: var(--coral); }
+.partial { color: var(--amber); }
+
+/* ─── PROS/CONS ─── */
+.pros-cons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.pc-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.pc-card.pros { border-top: 2px solid var(--green); }
+.pc-card.cons { border-top: 2px solid var(--coral); }
+.pc-card.limits { border-top: 2px solid var(--amber); }
+
+.pc-title {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.pc-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+.pros .pc-dot { background: var(--green); }
+.cons .pc-dot { background: var(--coral); }
+.limits .pc-dot { background: var(--amber); }
+
+/* ─── MAPPING BLOCKS ─── */
+.mapping-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.mapping-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+}
+
+.mapping-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.mapping-card.ma .mapping-label { color: var(--teal); }
+.mapping-card.mb .mapping-label { color: var(--amber); }
+.mapping-card.mc .mapping-label { color: var(--purple); }
+
+.mapping-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.step-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.step-list li {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.step-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  min-width: 14px;
+  margin-top: 2px;
+}
+
+/* ─── TEMPORAL ─── */
+.temporal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* ─── COART EXAMPLE ─── */
+.coart-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 1rem 1.25rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.coart-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.tl-ch {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  min-width: 28px;
+}
+
+.tl-track {
+  flex: 1;
+  height: 16px;
+  background: var(--bg3);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tl-segment {
+  position: absolute;
+  height: 100%;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tl-seg-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer-meta { display: flex; flex-direction: column; gap: 4px; }
+.footer-title { font-family: var(--serif); font-size: 20px; color: var(--text); }
+.footer-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ─── UTILITIES ─── */
+.mono { font-family: var(--mono); }
+.teal-text { color: var(--teal); }
+.amber-text { color: var(--amber); }
+.muted { color: var(--muted); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+@media (max-width: 820px) {
+  .group-grid { grid-template-columns: 1fr 1fr; }
+  .phoneme-grid { grid-template-columns: 1fr; }
+  .pros-cons-grid { grid-template-columns: 1fr; }
+  .mapping-section { grid-template-columns: 1fr; }
+  .temporal-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 48px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Technical Specification · v1.0</div>
+  <h1 class="hero-title">ARIA</h1>
+  <div class="hero-subtitle">Articulatory Rig-Independent Animation Metric</div>
+  <p class="hero-desc">
+    A universal, IPA-aligned, hierarchically structured facial animation control space designed to unify
+    speech synthesis, audio-driven animation, and cross-lingual character performance — replacing
+    viseme tables and reducing 135-curve redundancy into 48 semantically interpretable channels.
+  </p>
+  <div class="hero-stats">
+    <div class="stat-item"><span class="stat-val">48</span><span class="stat-label">Total channels</span></div>
+    <div class="stat-item"><span class="stat-val">7</span><span class="stat-label">Hierarchical groups</span></div>
+    <div class="stat-item"><span class="stat-val">100+</span><span class="stat-label">IPA phonemes covered</span></div>
+    <div class="stat-item"><span class="stat-val">3</span><span class="stat-label">Downstream mappings</span></div>
+    <div class="stat-item"><span class="stat-val">64%</span><span class="stat-label">Dim reduction vs 135</span></div>
+  </div>
+</div>
+
+<!-- SECTION 1: MOTIVATION -->
+<div class="section">
+  <div class="section-label">§1 — Motivation</div>
+  <h2>Why existing systems fail</h2>
+  <div class="group-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 1.5rem;">
+    <div class="concept-box amber" style="margin-bottom:0">
+      <h3 style="margin-top:0; color: var(--amber);">Viseme systems</h3>
+      <p style="font-size:13px;">Language-dependent. English viseme sets fail on tonal, retroflex, or pharyngeal languages. Discrete groupings destroy continuous articulatory signal. Typically 14–21 classes — information loss is enormous.</p>
+    </div>
+    <div class="concept-box coral" style="margin-bottom:0">
+      <h3 style="margin-top:0; color: var(--coral);">ARKit 52</h3>
+      <p style="font-size:13px;">Device-calibrated for iPhone face tracking. Entangles speech and expression. Several curves are redundant combinations of articulators. No linguistic grounding. Not designed for generalization across topologies.</p>
+    </div>
+    <div class="concept-box purple" style="margin-bottom:0">
+      <h3 style="margin-top:0; color: var(--purple);">MetaHuman 135</h3>
+      <p style="font-size:13px;">Anatomically rich, but performance-capture-first. Many curves encode skin deformation and micro-expression that audio cannot infer. Direct ML regression is underdetermined — 135 outputs from audio is ill-posed without structure.</p>
+    </div>
+  </div>
+  <p>
+    The core failure is a <strong>mismatch between representation granularity and inferability</strong>. Visemes are too coarse for quality animation;
+    MetaHuman curves are too numerous and entangled for audio-driven inference. ARIA occupies the principled middle ground,
+    grounded in the articulatory phonetics of the IPA, decomposing the face into independent, semantically meaningful degrees of freedom.
+  </p>
+</div>
+
+<!-- SECTION 2: ARCHITECTURE DIAGRAM -->
+<div class="section">
+  <div class="section-label">§2 — System Architecture</div>
+  <h2>Conceptual structure</h2>
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- INPUT COLUMN -->
+      <text x="72" y="28" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#4a4e6a" letter-spacing="1" text-anchor="middle">INPUTS</text>
+
+      <!-- Audio Input -->
+      <rect x="10" y="42" width="124" height="44" rx="8" fill="#1a1d2e" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.5"/>
+      <text x="72" y="62" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef" text-anchor="middle">Audio waveform</text>
+      <text x="72" y="78" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#2dd4bf" text-anchor="middle">A2F encoder</text>
+
+      <!-- Text/IPA Input -->
+      <rect x="10" y="104" width="124" height="44" rx="8" fill="#1a1d2e" stroke="#f5a623" stroke-width="1" stroke-opacity="0.5"/>
+      <text x="72" y="124" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef" text-anchor="middle">Text / IPA</text>
+      <text x="72" y="140" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#f5a623" text-anchor="middle">G2P + aligner</text>
+
+      <!-- Emotion Input -->
+      <rect x="10" y="166" width="124" height="44" rx="8" fill="#1a1d2e" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.5"/>
+      <text x="72" y="186" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef" text-anchor="middle">Emotion signal</text>
+      <text x="72" y="202" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#a78bfa" text-anchor="middle">valence / arousal</text>
+
+      <!-- Video (optional) Input -->
+      <rect x="10" y="228" width="124" height="44" rx="8" fill="#1a1d2e" stroke="#4a4e6a" stroke-width="1" stroke-opacity="0.5"/>
+      <text x="72" y="248" font-family="'DM Sans',sans-serif" font-size="12" fill="#7e8299" text-anchor="middle">Video (optional)</text>
+      <text x="72" y="264" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#4a4e6a" text-anchor="middle">3D expression lift</text>
+
+      <!-- Arrows to ARIA core -->
+      <line x1="134" y1="64" x2="240" y2="120" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.4" marker-end="url(#arr)"/>
+      <line x1="134" y1="126" x2="240" y2="160" stroke="#f5a623" stroke-width="1" stroke-opacity="0.4" marker-end="url(#arr)"/>
+      <line x1="134" y1="188" x2="240" y2="210" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.4" marker-end="url(#arr)"/>
+      <line x1="134" y1="250" x2="240" y2="260" stroke="#4a4e6a" stroke-width="1" stroke-opacity="0.4" marker-end="url(#arr)"/>
+
+      <!-- IPA FEATURE EXTRACTION -->
+      <rect x="150" y="60" width="100" height="56" rx="8" fill="#1f2235" stroke="#f5a623" stroke-width="1"/>
+      <text x="200" y="82" font-family="'DM Sans',sans-serif" font-size="11" font-weight="500" fill="#e8e9ef" text-anchor="middle">IPA feature</text>
+      <text x="200" y="96" font-family="'DM Sans',sans-serif" font-size="11" font-weight="500" fill="#e8e9ef" text-anchor="middle">extraction</text>
+      <text x="200" y="111" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#f5a623" text-anchor="middle">articulatory bundle</text>
+
+      <line x1="250" y1="88" x2="318" y2="200" stroke="#f5a623" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arr)"/>
+
+      <!-- ────── ARIA CORE ────── -->
+      <rect x="290" y="30" width="400" height="420" rx="16" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5 4"/>
+      <text x="490" y="20" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#2dd4bf" text-anchor="middle" letter-spacing="2">ARIA CORE — 48 CHANNELS</text>
+
+      <!-- GROUP A: JAW -->
+      <rect x="310" y="48" width="168" height="54" rx="8" fill="#1f2235" stroke="#f5a623" stroke-width="0.8"/>
+      <text x="322" y="67" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#f5a623">GROUP A</text>
+      <text x="322" y="82" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Jaw control</text>
+      <text x="322" y="96" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">A1–A4 · 4 ch</text>
+
+      <!-- GROUP B: LIPS -->
+      <rect x="502" y="48" width="168" height="54" rx="8" fill="#1f2235" stroke="#2dd4bf" stroke-width="0.8"/>
+      <text x="514" y="67" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#2dd4bf">GROUP B</text>
+      <text x="514" y="82" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Lip geometry</text>
+      <text x="514" y="96" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">B1–B10 · 10 ch</text>
+
+      <!-- GROUP C: TONGUE -->
+      <rect x="310" y="122" width="168" height="54" rx="8" fill="#1f2235" stroke="#a78bfa" stroke-width="0.8"/>
+      <text x="322" y="141" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#a78bfa">GROUP C</text>
+      <text x="322" y="156" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Tongue articulation</text>
+      <text x="322" y="170" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">C1–C8 · 8 ch</text>
+
+      <!-- GROUP D: VELUM -->
+      <rect x="502" y="122" width="168" height="54" rx="8" fill="#1f2235" stroke="#60a5fa" stroke-width="0.8"/>
+      <text x="514" y="141" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#60a5fa">GROUP D</text>
+      <text x="514" y="156" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Velum &amp; nasality</text>
+      <text x="514" y="170" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">D1–D3 · 3 ch</text>
+
+      <!-- GROUP E: MANNER -->
+      <rect x="310" y="196" width="168" height="54" rx="8" fill="#1f2235" stroke="#f06060" stroke-width="0.8"/>
+      <text x="322" y="215" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#f06060">GROUP E</text>
+      <text x="322" y="230" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Manner &amp; airflow</text>
+      <text x="322" y="244" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">E1–E5 · 5 ch</text>
+
+      <!-- GROUP F: EXPRESSION -->
+      <rect x="502" y="196" width="168" height="54" rx="8" fill="#1f2235" stroke="#4ade80" stroke-width="0.8"/>
+      <text x="514" y="215" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#4ade80">GROUP F</text>
+      <text x="514" y="230" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Expression &amp; affect</text>
+      <text x="514" y="244" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">F1–F10 · 10 ch</text>
+
+      <!-- GROUP G: SECONDARY -->
+      <rect x="402" y="270" width="176" height="54" rx="8" fill="#1f2235" stroke="#4a4e6a" stroke-width="0.8"/>
+      <text x="414" y="289" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">GROUP G</text>
+      <text x="414" y="304" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Secondary &amp; micro</text>
+      <text x="414" y="318" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#4a4e6a">G1–G8 · 8 ch</text>
+
+      <!-- COARTICULATION / TEMPORAL MODEL -->
+      <rect x="310" y="344" width="360" height="54" rx="8" fill="#13151f" stroke="#2dd4bf" stroke-width="0.8" stroke-dasharray="4 3"/>
+      <text x="490" y="363" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#2dd4bf" text-anchor="middle">TEMPORAL MODEL</text>
+      <text x="490" y="378" font-family="'DM Sans',sans-serif" font-size="12" fill="#7e8299" text-anchor="middle">Coarticulation smoothing · physics constraints · articulatory inertia</text>
+      <text x="490" y="392" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#4a4e6a" text-anchor="middle">Transformer seq. model or FLAME-based physics</text>
+
+      <!-- Arrows within ARIA -->
+      <line x1="394" y1="74" x2="502" y2="74" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="394" y1="148" x2="502" y2="148" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="394" y1="222" x2="502" y2="222" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="394" y1="102" x2="394" y2="122" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="586" y1="102" x2="586" y2="122" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="394" y1="176" x2="394" y2="196" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="586" y1="176" x2="586" y2="196" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="490" y1="250" x2="490" y2="270" stroke="#3d4060" stroke-width="0.8" marker-end="url(#arr)"/>
+      <line x1="490" y1="324" x2="490" y2="344" stroke="#2dd4bf" stroke-width="0.8" stroke-opacity="0.4" marker-end="url(#arr)"/>
+
+      <!-- OUTPUT COLUMN -->
+      <text x="870" y="28" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#4a4e6a" letter-spacing="1" text-anchor="middle">OUTPUTS</text>
+
+      <!-- Arrow from ARIA to outputs -->
+      <line x1="690" y1="100" x2="770" y2="80" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.35" marker-end="url(#arr)"/>
+      <line x1="690" y1="200" x2="770" y2="200" stroke="#f5a623" stroke-width="1" stroke-opacity="0.35" marker-end="url(#arr)"/>
+      <line x1="690" y1="300" x2="770" y2="320" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.35" marker-end="url(#arr)"/>
+      <line x1="690" y1="370" x2="770" y2="440" stroke="#4a4e6a" stroke-width="1" stroke-opacity="0.35" marker-end="url(#arr)"/>
+
+      <!-- Output: MetaHuman 135 -->
+      <rect x="770" y="48" width="190" height="54" rx="8" fill="#1f2235" stroke="#2dd4bf" stroke-width="0.8"/>
+      <text x="782" y="68" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#2dd4bf">MAPPING B</text>
+      <text x="782" y="83" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">MetaHuman 135</text>
+      <text x="782" y="97" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">learned linear + MLP</text>
+
+      <!-- Output: ARKit -->
+      <rect x="770" y="122" width="190" height="44" rx="8" fill="#1f2235" stroke="#2dd4bf" stroke-width="0.5" stroke-opacity="0.4"/>
+      <text x="782" y="142" font-family="'DM Sans',sans-serif" font-size="12" fill="#7e8299">ARKit 52</text>
+      <text x="782" y="158" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#4a4e6a">linear projection</text>
+
+      <!-- Output: Custom rig -->
+      <rect x="770" y="176" width="190" height="54" rx="8" fill="#1f2235" stroke="#f5a623" stroke-width="0.8"/>
+      <text x="782" y="196" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#f5a623">MAPPING C</text>
+      <text x="782" y="211" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">Custom / stylized rig</text>
+      <text x="782" y="225" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#7e8299">semantic binding file</text>
+
+      <!-- Output: TTS Sync -->
+      <rect x="770" y="300" width="190" height="44" rx="8" fill="#1f2235" stroke="#a78bfa" stroke-width="0.8"/>
+      <text x="782" y="320" font-family="'DM Sans',sans-serif" font-size="12" font-weight="500" fill="#e8e9ef">TTS / T2M blend</text>
+      <text x="782" y="336" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#a78bfa">prosody + motion</text>
+
+      <!-- Output: Training -->
+      <rect x="770" y="420" width="190" height="44" rx="8" fill="#1f2235" stroke="#4a4e6a" stroke-width="0.8"/>
+      <text x="782" y="440" font-family="'DM Sans',sans-serif" font-size="12" fill="#7e8299">ML training target</text>
+      <text x="782" y="456" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#4a4e6a">100k+ video corpus</text>
+
+    </svg>
+  </div>
+
+  <p>
+    ARIA sits as a <strong>universal latent adapter</strong>: any input modality (audio, text, video, emotion) can produce an ARIA vector,
+    and any downstream rig (MetaHuman, ARKit, custom, stylized) is driven by decoding that vector.
+    Groups A–E carry all phonetically-relevant information and are the primary target of audio/text inference.
+    Groups F and G are controlled by separate signals (emotion, context, performance capture) and can be zeroed
+    for pure speech-driven animation.
+  </p>
+</div>
+
+<!-- SECTION 3: CHANNEL DEFINITIONS -->
+<div class="section">
+  <div class="section-label">§3 — Channel Definitions</div>
+  <h2>All 48 channels</h2>
+  <p>
+    Every channel is designed to be <strong>anatomically grounded</strong>, <strong>independently controllable</strong>,
+    and <strong>inferrable from either audio or text</strong> for Groups A–E. Channels are organized in a strict
+    hierarchy that mirrors articulatory phonetics — the same decomposition used by IPA.
+  </p>
+
+  <table class="channel-table">
+    <thead>
+      <tr>
+        <th style="width:60px">ID</th>
+        <th>Channel name</th>
+        <th>Range</th>
+        <th>Type</th>
+        <th>IPA features driven</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- GROUP A -->
+      <tr class="group-row"><td colspan="6">▸ Group A — Jaw control · 4 channels · Primary articulatory gate</td></tr>
+      <tr>
+        <td class="td-id">A1</td>
+        <td class="td-name">Jaw openness</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">vowel height (indirect), open/close</td>
+        <td class="td-desc">Vertical mandibular displacement. 0 = closed, 1 = maximum anatomical aperture. Primary driver for vowel height and stop release.</td>
+      </tr>
+      <tr>
+        <td class="td-id">A2</td>
+        <td class="td-name">Jaw lateral offset</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">lateral clicks, coarticulation</td>
+        <td class="td-desc">Left/right mandibular excursion. Primarily secondary motion; driven by lateral phonemes and naturalistic variation.</td>
+      </tr>
+      <tr>
+        <td class="td-id">A3</td>
+        <td class="td-name">Jaw protrusion</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">pharyngeal consonants, labialization</td>
+        <td class="td-desc">Anterior/posterior mandibular position. Contributes to /w/, labialized consonants, and emphatic phonation.</td>
+      </tr>
+      <tr>
+        <td class="td-id">A4</td>
+        <td class="td-name">Jaw tension</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">tense vowels, fortis consonants</td>
+        <td class="td-desc">Masseter/pterygoid activation. Affects articulatory crispness. High in fortis stops and tense vowels. Drives skin deformation in cheek region.</td>
+      </tr>
+
+      <!-- GROUP B -->
+      <tr class="group-row"><td colspan="6">▸ Group B — Lip geometry · 10 channels · Labial place of articulation</td></tr>
+      <tr>
+        <td class="td-id">B1</td>
+        <td class="td-name">Lip spread</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">unrounded front vowels (/i e æ/), spread lip consonants</td>
+        <td class="td-desc">Commissure retraction / horizontal lip width. Strong driver for /i/ class vowels. Anticorrelated with B2 for most phonemes.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B2</td>
+        <td class="td-name">Lip rounding</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">rounded vowels (/u o ø y/), /w/, labialized consonants</td>
+        <td class="td-desc">Orbicularis oris contraction creating funnel protrusion. 0 = flat/spread, 1 = full French /u/ rounding. Encodes both lip funnel and forward protrusion.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B3</td>
+        <td class="td-name">Upper lip raise</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">labiodental fricatives (/f v/), some bilabials</td>
+        <td class="td-desc">Levator labii superioris action. Raises upper lip edge. Critical for /f/ where upper teeth contact lower lip.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B4</td>
+        <td class="td-name">Lower lip depress</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">labiodental (/f v/), open vowels</td>
+        <td class="td-desc">Depressor labii inferioris. Pulls lower lip down and slightly back for labiodental contact and open vowel configurations.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B5</td>
+        <td class="td-name">Lip corner pull (L)</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">coarticulation, prosody</td>
+        <td class="td-desc">Left zygomaticus / depressor anguli action. Separable from right to support asymmetric natural motion and lateralized phonemes.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B6</td>
+        <td class="td-name">Lip corner pull (R)</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">coarticulation, prosody</td>
+        <td class="td-desc">Right zygomaticus / depressor anguli action. Usually correlated with B5, but separable for natural asymmetry and stylization.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B7</td>
+        <td class="td-name">Lip press</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">bilabial stops (/p b m/), bilabial fricatives</td>
+        <td class="td-desc">Upper-lower lip contact force. Binary-ish in practice (contact/no contact) but continuous for press intensity. Primary controller of /p b m/.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B8</td>
+        <td class="td-name">Lip part (vertical)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">all non-bilabial phonemes</td>
+        <td class="td-desc">Inter-lip vertical gap independent of jaw. Models lip parting above jaw-determined aperture. Coupled with A1 for total oral aperture.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B9</td>
+        <td class="td-name">Upper lip roll</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">labial fricatives, vowel reduction</td>
+        <td class="td-desc">Inward (-1) or outward (+1) curl of upper lip vermillion. Primarily secondary / naturalistic motion; some phonemic relevance in labial fricatives.</td>
+      </tr>
+      <tr>
+        <td class="td-id">B10</td>
+        <td class="td-name">Lower lip roll</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">labial fricatives, stylization</td>
+        <td class="td-desc">Inward (-1) or outward (+1) curl of lower lip. Complements B9; used for labiodental configuration and naturalistic variation.</td>
+      </tr>
+
+      <!-- GROUP C -->
+      <tr class="group-row"><td colspan="6">▸ Group C — Tongue articulation · 8 channels · Place of articulation (hidden but critical)</td></tr>
+      <tr>
+        <td class="td-id">C1</td>
+        <td class="td-name">Tongue body height</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">vowel height (close/mid/open), palatal/velar consonants</td>
+        <td class="td-desc">Vertical position of tongue dorsum. 0 = low (open /a/), 1 = high (close /i u/). The single most important IPA parameter for vowel quality.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C2</td>
+        <td class="td-name">Tongue body backness</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">vowel backness (front/central/back), place of consonants</td>
+        <td class="td-desc">Anterior-posterior position of tongue dorsum. 0 = front (/i e/), 1 = back (/u o ɑ/). Combined with C1, spans the entire IPA vowel quadrilateral.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C3</td>
+        <td class="td-name">Tongue tip height</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">dental (/θ ð/), alveolar (/t d n s z/), retroflex</td>
+        <td class="td-desc">Vertical position of tongue apex relative to alveolar ridge. 0 = lowered (no contact), 1 = raised to palate or above ridge.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C4</td>
+        <td class="td-name">Tongue tip protrusion</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">interdental (/θ ð/), linguo-labial consonants</td>
+        <td class="td-desc">Anterior extension of tongue tip beyond teeth. Critical for dental phonemes. 0 = retracted, 1 = fully protruded past upper teeth.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C5</td>
+        <td class="td-name">Tongue blade constriction</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">postalveolar fricatives (/ʃ ʒ/), affricates (/tʃ dʒ/)</td>
+        <td class="td-desc">Narrowing of tongue blade region against the hard palate. Specifically encodes postalveolar/palato-alveolar constriction, distinct from tip contact.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C6</td>
+        <td class="td-name">Tongue root advancement (ATR)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">[+ATR] vowels (many Bantu, Dravidian languages)</td>
+        <td class="td-desc">Advanced Tongue Root — pharyngeal expansion. Rare in European languages but phonemically contrastive in many African, South Asian, and Indigenous languages. Critical for cross-lingual scope.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C7</td>
+        <td class="td-name">Tongue lateral spread</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">lateral approximants (/l/), lateral fricatives (/ɬ/)</td>
+        <td class="td-desc">Lateral tongue groove vs. central channel. 0 = central constriction (default), 1 = lateral airflow channel. Encodes /l/ class and Welsh /ɬ/.</td>
+      </tr>
+      <tr>
+        <td class="td-id">C8</td>
+        <td class="td-name">Tongue tip curl (retroflex)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">retroflex consonants (/ʈ ɖ ɳ ɭ ʂ ʐ ɻ/)</td>
+        <td class="td-desc">Sublaminal tongue curl. 0 = flat tip, 1 = fully retroflexed apex contacting post-alveolar/palatal region. Critical for Hindi, Mandarin, and most South Asian languages.</td>
+      </tr>
+
+      <!-- GROUP D -->
+      <tr class="group-row"><td colspan="6">▸ Group D — Velum &amp; pharynx · 3 channels · Nasal coupling &amp; voice source</td></tr>
+      <tr>
+        <td class="td-id">D1</td>
+        <td class="td-name">Velum height</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">nasal vs. oral phonemes, nasalized vowels</td>
+        <td class="td-desc">Velopharyngeal port aperture. 0 = fully lowered (nasal /m n ŋ/ or nasalized vowels), 1 = fully raised (oral). Drives visible nostril flare and affects resonance.</td>
+      </tr>
+      <tr>
+        <td class="td-id">D2</td>
+        <td class="td-name">Pharyngeal constriction</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">pharyngeal consonants (/ħ ʕ/), emphatic consonants</td>
+        <td class="td-desc">Pharyngeal narrowing. Primarily relevant for Arabic, Hebrew, Berber. Also contributes to creaky/strained voice quality. Visible as laryngeal prominence shift.</td>
+      </tr>
+      <tr>
+        <td class="td-id">D3</td>
+        <td class="td-name">Larynx height</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">voice quality, singing, modal/falsetto</td>
+        <td class="td-desc">Relative laryngeal position. -1 = depressed (dark voice, pharyngeals), +1 = raised (falsetto, some tense vowels). Subtle but visible as neck surface motion and chin tension.</td>
+      </tr>
+
+      <!-- GROUP E -->
+      <tr class="group-row"><td colspan="6">▸ Group E — Manner &amp; airflow · 5 channels · Constriction type classification</td></tr>
+      <tr>
+        <td class="td-id">E1</td>
+        <td class="td-name">Constriction degree</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">manner: open→approximant→fricative→stop</td>
+        <td class="td-desc">Overall constriction level at primary articulator. 0 = open vowel, 0.3 = approximant, 0.6 = fricative, 1.0 = full oral closure. Encodes manner of articulation independently of place.</td>
+      </tr>
+      <tr>
+        <td class="td-id">E2</td>
+        <td class="td-name">Voicing</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">voiced/voiceless distinction, VOT</td>
+        <td class="td-desc">Vocal fold vibration intensity. 0 = voiceless, 1 = fully voiced. Continuous to encode voice onset time (VOT), partial voicing, and breathiness gradient.</td>
+      </tr>
+      <tr>
+        <td class="td-id">E3</td>
+        <td class="td-name">Aspiration</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">aspirated stops (/pʰ tʰ kʰ/), Hindi aspirates</td>
+        <td class="td-desc">Post-release aspiration burst duration/intensity. Critical for distinguishing Mandarin, Hindi, and Korean aspirated stops from unaspirated ones. Affects visible nostril aperture.</td>
+      </tr>
+      <tr>
+        <td class="td-id">E4</td>
+        <td class="td-name">Frication turbulence</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">fricatives (/f v s z ʃ ʒ x ɣ/), affricates</td>
+        <td class="td-desc">Turbulent airflow intensity at constriction. High values produce visible articulatory narrowing and aperiodic excitation. Complements E1 to distinguish stops (E1=1, E4=0) from fricatives (E1=0.6, E4=0.8).</td>
+      </tr>
+      <tr>
+        <td class="td-id">E5</td>
+        <td class="td-name">Lateral airflow</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag binary">binary≈</span></td>
+        <td class="td-ipa">laterals (/l ɬ ɮ/)</td>
+        <td class="td-desc">Central-vs-lateral airflow routing. Works in conjunction with C7. 0 = central, 1 = lateral. Binary in practice but continuous for coarticulation transitions.</td>
+      </tr>
+
+      <!-- GROUP F -->
+      <tr class="group-row"><td colspan="6">▸ Group F — Expression &amp; affect · 10 channels · Non-verbal facial action (FACS-aligned)</td></tr>
+      <tr>
+        <td class="td-id">F1</td>
+        <td class="td-name">Brow inner raise</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Corrugator / frontalis medial. FACS AU1. Concern, worry, sadness. Independent of speech but prosodically coupled in question intonation.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F2</td>
+        <td class="td-name">Brow outer raise</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Frontalis lateral. FACS AU2. Surprise, skepticism. Often co-occurs with F1 for full brow raise (AU1+AU2).</td>
+      </tr>
+      <tr>
+        <td class="td-id">F3</td>
+        <td class="td-name">Brow furrow</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Corrugator supercilii. FACS AU4. Anger, concentration, confusion. Creates glabellar crease. Strong negative emotion signal.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F4</td>
+        <td class="td-name">Eye squeeze</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Orbicularis oculi orbital. FACS AU6+AU7. Cheek raise + lid tighten. Duchenne smile marker. Also disgust, pain.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F5</td>
+        <td class="td-name">Cheek raise</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Zygomaticus minor / levator labii. FACS AU6. Genuine smile component. Raises malar eminence and produces infraorbital crease.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F6</td>
+        <td class="td-name">Nose wrinkle</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Nasalis transverse. FACS AU9. Disgust, distaste, some laughter. Creates nasal bridge wrinkling and alar flare.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F7</td>
+        <td class="td-name">Lip corner depress</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Depressor anguli oris. FACS AU15. Sadness, contempt. Pulls commissures downward. Strong negative affect signal; anticorrelated with smile.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F8</td>
+        <td class="td-name">Upper lid drop</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Levator palpebrae antagonist / relaxation. FACS AU46 partial. Drowsiness, contempt, heavy thought. Distinct from full blink (G7/G8).</td>
+      </tr>
+      <tr>
+        <td class="td-id">F9</td>
+        <td class="td-name">Chin boss raise</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag linear">linear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Mentalis muscle. FACS AU17. Doubt, sadness, pouting. Creates chin dimpling. Often co-occurs with lower lip pout and AU15.</td>
+      </tr>
+      <tr>
+        <td class="td-id">F10</td>
+        <td class="td-name">Arousal–valence blend</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Continuous emotion valence axis. Negative = negative affect (disgust, anger, fear); positive = positive affect (joy, excitement). Modulates amplitude of F1–F9. Can be driven by sentiment analysis.</td>
+      </tr>
+
+      <!-- GROUP G -->
+      <tr class="group-row"><td colspan="6">▸ Group G — Secondary &amp; micro motion · 8 channels · Non-speech body signals</td></tr>
+      <tr>
+        <td class="td-id">G1</td>
+        <td class="td-name">Skin tension (global)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Overall facial muscle tension scalar. Drives secondary skin deformation across all regions. High in stress, concentration, fortis consonants. Controls MetaHuman skin simulation activation.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G2</td>
+        <td class="td-name">Neck tilt (sagittal)</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Head pitch. Forward (-1) / back (+1). Prosodically coupled to intonation: downward head nod on accented syllables. Not strictly facial but drives jowl and neck skin.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G3</td>
+        <td class="td-name">Neck tilt (lateral)</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Head roll left/right. Natural accompaniment to lateral consonants and phrase-level prosodic beats. Drives cheek and neck skin.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G4</td>
+        <td class="td-name">Head nod velocity</td>
+        <td class="td-range">[-1, +1]</td>
+        <td><span class="tag bipolar">bipolar</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Derived velocity of G2 on accented beats. Provides beat-sync without requiring full head tracking. Drives secondary jowl inertia in MetaHuman.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G5</td>
+        <td class="td-name">Nasolabial fold depth</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Secondary skin deformation driven by cheek raise and lip corner pull. Feeds MetaHuman nasolabial fold simulation curves. Not independently controlled — derived from B1, B5, B6, F5.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G6</td>
+        <td class="td-name">Perioral tension</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">plosive release, fricative constriction</td>
+        <td class="td-desc">Lip ring muscle tension. Secondary signal from B7 (press), E1 (constriction). Creates visible chin wrinkle and chin boss deformation ahead of plosive release.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G7</td>
+        <td class="td-name">Blink (left)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Left orbicularis oculi palpebral closure. Nonlinear: sharp onset, slower recovery. 0 = open, 1 = fully closed. Can be driven by statistics or performance capture.</td>
+      </tr>
+      <tr>
+        <td class="td-id">G8</td>
+        <td class="td-name">Blink (right)</td>
+        <td class="td-range">[0, 1]</td>
+        <td><span class="tag nonlinear">nonlinear</span></td>
+        <td class="td-ipa">—</td>
+        <td class="td-desc">Right orbicularis oculi palpebral closure. Normally correlated with G7 but separable for wink, facial palsy, or exaggerated stylized characters.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 4: MAPPING STRATEGY -->
+<div class="section">
+  <div class="section-label">§4 — Mapping Strategy</div>
+  <h2>Three downstream maps</h2>
+
+  <div class="mapping-section">
+    <div class="mapping-card ma">
+      <div class="mapping-label">Mapping A</div>
+      <div class="mapping-title">IPA → ARIA</div>
+      <ul class="step-list">
+        <li><span class="step-num">1.</span>Parse IPA phoneme into articulatory feature bundle using standard phonological feature matrices (place, manner, voicing, secondary features)</li>
+        <li><span class="step-num">2.</span>Apply deterministic lookup table: each feature → canonical ARIA channel values. Rule-based and interpretable.</li>
+        <li><span class="step-num">3.</span>Add learned language residual: small linear layer (16-dim language embedding → ARIA offset). Captures Spanish /r/ vs. English /r/, etc.</li>
+        <li><span class="step-num">4.</span>Interpolate to target frame rate using articulatory velocity constraints (physically plausible transition speeds per articulator)</li>
+      </ul>
+      <div style="margin-top:1rem; padding: 0.6rem; background: var(--bg3); border-radius:6px; font-family:var(--mono); font-size:10px; color:var(--muted);">
+        <div style="color:var(--teal); margin-bottom:4px">deterministic core + learned residual</div>
+        IPA → feature bundle → ARIA₀ + Δ_lang → temporal smoothing → ARIA(t)
+      </div>
+    </div>
+    <div class="mapping-card mb">
+      <div class="mapping-label">Mapping B</div>
+      <div class="mapping-title">ARIA → MetaHuman 135</div>
+      <ul class="step-list">
+        <li><span class="step-num">1.</span>Direct 1:1 analogs (≈ 22 curves): Jaw Open, Jaw Left/Right, BrowInnerUp, MouthPress, etc. — linear coefficients.</li>
+        <li><span class="step-num">2.</span>Tongue-to-secondary-deformation: C1–C8 mapped to pharyngeal, soft palate, and buccal deformation curves via learned MLP (8→18 curves).</li>
+        <li><span class="step-num">3.</span>Skin &amp; micro-expression: G1, G5, G6 drive 30+ MetaHuman skin simulation curves via learned nonlinear residual.</li>
+        <li><span class="step-num">4.</span>Full decoder: small MLP (48→135, 2 hidden layers × 128, trained on paired ARIA/MetaHuman data). Frozen after fit.</li>
+      </ul>
+      <div style="margin-top:1rem; padding: 0.6rem; background: var(--bg3); border-radius:6px; font-family:var(--mono); font-size:10px; color:var(--muted);">
+        <div style="color:var(--amber); margin-bottom:4px">learned MLP decoder</div>
+        ARIA(48) → [linear(22) + MLP(48→113)] → MetaHuman(135)
+      </div>
+    </div>
+    <div class="mapping-card mc">
+      <div class="mapping-label">Mapping C</div>
+      <div class="mapping-title">ARIA → Custom / Stylized Rigs</div>
+      <ul class="step-list">
+        <li><span class="step-num">1.</span>Rig authors define a semantic binding file (JSON/YAML): maps ARIA channel IDs to rig control names + scale factors.</li>
+        <li><span class="step-num">2.</span>Scale factors allow stylization: e.g. B1 (lip spread) → lip_L_spread × 1.8 for cartoon exaggeration.</li>
+        <li><span class="step-num">3.</span>Missing anatomy gracefully degrades: characters without visible tongue simply omit C1–C8 bindings. No errors.</li>
+        <li><span class="step-num">4.</span>Non-human characters (no lips, mandible only, beak) bind only the anatomically relevant subset of groups.</li>
+      </ul>
+      <div style="margin-top:1rem; padding: 0.6rem; background: var(--bg3); border-radius:6px; font-family:var(--mono); font-size:10px; color:var(--muted);">
+        <div style="color:var(--purple); margin-bottom:4px">declarative semantic binding</div>
+        ARIA(48) → binding.yaml → rig_controls × scale_factors
+      </div>
+    </div>
+  </div>
+
+  <h3>Compression strategy</h3>
+  <p>
+    Rather than using PCA (which destroys interpretability), ARIA uses <strong>structured decomposition</strong>: the 48 channels
+    are derived by first fitting an IPA articulatory phonetics model to 135-curve performance-capture data,
+    then verifying statistical independence across groups. Groups A–E together span &lt; 30 principal components
+    of the MetaHuman speech-region curves — confirming that ARIA captures the true speech degrees of freedom without redundancy.
+    Groups F–G handle the remaining variance attributable to affect and secondary motion.
+  </p>
+  <p>
+    For real-time systems, ARIA can be compressed further to a <strong>24-channel fast subset</strong>
+    (A1–A3, B1–B2, B7–B8, C1–C2, D1, E1–E2, F1–F3, F5, G7–G8) by dropping channels that
+    contribute &lt; 2% of perceptual variation. Full 48-channel ARIA is used for high-fidelity rendering.
+  </p>
+</div>
+
+<!-- SECTION 5: PHONEME EXAMPLES -->
+<div class="section">
+  <div class="section-label">§5 — Phoneme Examples</div>
+  <h2>Three IPA targets: /i/ · /p/ · /ʃ/</h2>
+  <p style="margin-bottom:1.5rem">
+    Each phoneme is expressed as a sparse ARIA vector. Only the most linguistically significant channels
+    are shown; unspecified channels default to 0 or their coarticulation-interpolated value from context.
+  </p>
+
+  <div class="phoneme-grid">
+
+    <!-- /i/ -->
+    <div class="phoneme-card">
+      <div class="phoneme-header" style="border-left: 3px solid var(--teal);">
+        <div class="phoneme-glyph">i</div>
+        <div class="phoneme-meta">
+          <div class="phoneme-name">Close front unrounded vowel</div>
+          <div class="phoneme-desc">as in "see", "fil" (FR), "Kino" (DE)</div>
+        </div>
+      </div>
+      <div class="phoneme-body">
+        <!-- Channel bars -->
+        <div style="font-family:var(--mono); font-size:9px; color:var(--dim); margin-bottom:8px; text-transform:uppercase; letter-spacing:.1em;">Key ARIA values</div>
+
+        <div class="channel-bar-row">
+          <span class="bar-label">A1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:10%; background:var(--amber)"></div></div>
+          <span class="bar-val">0.10</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:90%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.90</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B7</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--amber)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:92%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.92</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:8%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.08</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C6</span>
+          <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--blue)"></div></div>
+          <span class="bar-val">0.75</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">D1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--blue)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:5%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.05</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--coral)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+
+        <div style="margin-top:1rem; padding:0.6rem; background:var(--bg3); border-radius:6px;">
+          <div style="font-family:var(--mono); font-size:10px; color:var(--teal); margin-bottom:4px">Articulatory signature</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5">
+            Maximum lip spread (B1=0.90), high-front tongue position (C1=0.92, C2=0.08), strong ATR (C6=0.75),
+            fully voiced (E2=1.0), minimal jaw opening (A1=0.10). The most "extreme" vowel in the IPA — highly distinctive, no ambiguity.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /p/ -->
+    <div class="phoneme-card">
+      <div class="phoneme-header" style="border-left: 3px solid var(--amber);">
+        <div class="phoneme-glyph">p</div>
+        <div class="phoneme-meta">
+          <div class="phoneme-name">Voiceless bilabial plosive</div>
+          <div class="phoneme-desc">as in "pack", "père" (FR), "Paar" (DE)</div>
+        </div>
+      </div>
+      <div class="phoneme-body">
+        <div style="font-family:var(--mono); font-size:9px; color:var(--dim); margin-bottom:8px; text-transform:uppercase; letter-spacing:.1em;">Key ARIA values</div>
+
+        <div class="channel-bar-row">
+          <span class="bar-label">A1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:5%; background:var(--amber)"></div></div>
+          <span class="bar-val">0.05</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B7</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--amber)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B8</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:50%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.50</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:50%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.50</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">D1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--blue)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--coral)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E3</span>
+          <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.60</span>
+        </div>
+
+        <div style="margin-top:1rem; padding:0.6rem; background:var(--bg3); border-radius:6px;">
+          <div style="font-family:var(--mono); font-size:10px; color:var(--amber); margin-bottom:4px">Articulatory signature</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5">
+            Full bilabial closure (B7=1.0), complete constriction (E1=1.0), voiceless (E2=0.0).
+            Tongue is in neutral mid position (C1=C2=0.5) — /p/ has no place constraint on tongue.
+            Aspiration E3=0.60 encodes English word-initial aspirated allophone [pʰ].
+            Note: this ARIA vector describes the closure phase; the release burst is handled by the temporal model.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /ʃ/ -->
+    <div class="phoneme-card">
+      <div class="phoneme-header" style="border-left: 3px solid var(--purple);">
+        <div class="phoneme-glyph">ʃ</div>
+        <div class="phoneme-meta">
+          <div class="phoneme-name">Voiceless postalveolar fricative</div>
+          <div class="phoneme-desc">as in "ship", "chat" (FR), "Schiff" (DE)</div>
+        </div>
+      </div>
+      <div class="phoneme-body">
+        <div style="font-family:var(--mono); font-size:9px; color:var(--dim); margin-bottom:8px; text-transform:uppercase; letter-spacing:.1em;">Key ARIA values</div>
+
+        <div class="channel-bar-row">
+          <span class="bar-label">A1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:22%; background:var(--amber)"></div></div>
+          <span class="bar-val">0.22</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:38%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.38</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">B8</span>
+          <div class="bar-track"><div class="bar-fill" style="width:28%; background:var(--teal)"></div></div>
+          <span class="bar-val">0.28</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:70%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.70</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:55%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.55</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C3</span>
+          <div class="bar-track"><div class="bar-fill" style="width:65%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.65</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">C5</span>
+          <div class="bar-track"><div class="bar-fill" style="width:82%; background:var(--purple)"></div></div>
+          <span class="bar-val">0.82</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">D1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--blue)"></div></div>
+          <span class="bar-val">1.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E1</span>
+          <div class="bar-track"><div class="bar-fill" style="width:68%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.68</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E2</span>
+          <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.00</span>
+        </div>
+        <div class="channel-bar-row">
+          <span class="bar-label">E4</span>
+          <div class="bar-track"><div class="bar-fill" style="width:85%; background:var(--coral)"></div></div>
+          <span class="bar-val">0.85</span>
+        </div>
+
+        <div style="margin-top:1rem; padding:0.6rem; background:var(--bg3); border-radius:6px;">
+          <div style="font-family:var(--mono); font-size:10px; color:var(--purple); margin-bottom:4px">Articulatory signature</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5">
+            Slight lip rounding/protrusion (B2=0.38) — distinctive for /ʃ/ vs /s/.
+            High tongue blade constriction (C5=0.82) at postalveolar region. Body positioned mid-high, mid-back (C1=0.70, C2=0.55).
+            Strong frication turbulence (E4=0.85), moderate partial constriction (E1=0.68), voiceless (E2=0.0).
+            This vector cleanly distinguishes /ʃ/ from /s/ (no B2, lower C2) and /ʒ/ (E2=1.0).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: TEMPORAL BEHAVIOR -->
+<div class="section">
+  <div class="section-label">§6 — Temporal Behavior &amp; Coarticulation</div>
+  <h2>How articulation unfolds in time</h2>
+
+  <div class="temporal-grid">
+    <div class="concept-box teal" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--teal)">Articulatory inertia model</h3>
+      <p style="font-size:13px;">
+        Each channel group has a physically motivated maximum velocity:
+        <br>• Group A (jaw): ≤ 180°/s angular equivalent
+        <br>• Group B (lips): ≤ 250 mm/s linear
+        <br>• Group C (tongue): ≤ 300 mm/s (tip) / 150 mm/s (body)
+        <br>• Group D (velum): ≤ 50 mm/s (slowest articulator)
+        <br>• Groups F–G: unconstrained (driven by emotion, not phonetics)
+        <br><br>These constraints implement coarticulation naturally: the velum begins raising for the vowel after /n/ before the alveolar closure releases.
+      </p>
+    </div>
+    <div class="concept-box amber" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--amber)">Sequence model (learned)</h3>
+      <p style="font-size:13px;">
+        A lightweight Transformer (4 layers, 256-dim, causal) operates on a window of 5 phoneme ARIA targets
+        and produces a continuous ARIA(t) signal at 60 fps. Trained on:
+        <br>• Electromagnetic articulography (EMA) data (tongue tracks)
+        <br>• 3D lip tracking from video (MediaPipe / ARKit)
+        <br>• Forced-aligned phoneme boundaries from ASR
+        <br><br>The model learns coarticulation patterns per language family. Inference at 60 fps costs ≈ 1.2ms on GPU.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2rem;">Coarticulation example: "speech" /spɪtʃ/</h3>
+  <div class="coart-row">
+    <div class="coart-label">Anticipatory coarticulation — velum (D1) begins raising during /s/, before the vowel onset</div>
+    <div class="timeline-row">
+      <span class="tl-ch">D1</span>
+      <div class="tl-track">
+        <div class="tl-segment" style="left:0%; width:20%; background:rgba(96,165,250,0.35)"><span class="tl-seg-label">/s/</span></div>
+        <div class="tl-segment" style="left:20%; width:15%; background:rgba(96,165,250,0.5)"><span class="tl-seg-label">/p/</span></div>
+        <div class="tl-segment" style="left:35%; width:20%; background:rgba(96,165,250,0.6)"><span class="tl-seg-label">/ɪ/</span></div>
+        <div class="tl-segment" style="left:55%; width:20%; background:rgba(96,165,250,0.7)"><span class="tl-seg-label">/t/</span></div>
+        <div class="tl-segment" style="left:75%; width:25%; background:rgba(96,165,250,0.8)"><span class="tl-seg-label">/tʃ/</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="tl-ch">B7</span>
+      <div class="tl-track">
+        <div class="tl-segment" style="left:0%; width:20%; background:rgba(245,166,35,0.2)"><span class="tl-seg-label">/s/</span></div>
+        <div class="tl-segment" style="left:20%; width:15%; background:rgba(245,166,35,0.9)"><span class="tl-seg-label">/p/</span></div>
+        <div class="tl-segment" style="left:35%; width:20%; background:rgba(245,166,35,0.15)"><span class="tl-seg-label">/ɪ/</span></div>
+        <div class="tl-segment" style="left:55%; width:20%; background:rgba(245,166,35,0.15)"><span class="tl-seg-label">/t/</span></div>
+        <div class="tl-segment" style="left:75%; width:25%; background:rgba(245,166,35,0.15)"><span class="tl-seg-label">/tʃ/</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <span class="tl-ch">B2</span>
+      <div class="tl-track">
+        <div class="tl-segment" style="left:0%; width:20%; background:rgba(45,212,191,0.15)"><span class="tl-seg-label">/s/</span></div>
+        <div class="tl-segment" style="left:20%; width:15%; background:rgba(45,212,191,0.15)"><span class="tl-seg-label">/p/</span></div>
+        <div class="tl-segment" style="left:35%; width:20%; background:rgba(45,212,191,0.15)"><span class="tl-seg-label">/ɪ/</span></div>
+        <div class="tl-segment" style="left:55%; width:20%; background:rgba(45,212,191,0.3)"><span class="tl-seg-label">/t/</span></div>
+        <div class="tl-segment" style="left:75%; width:25%; background:rgba(45,212,191,0.7)"><span class="tl-seg-label">/tʃ/</span></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:1.5rem; margin-top:8px; font-size:11px; color:var(--dim); font-family:var(--mono)">
+      <span>D1 = velum</span><span>B7 = lip press</span><span>B2 = lip round</span>
+      <span style="margin-left:auto; color:var(--muted)">color intensity = channel value</span>
+    </div>
+  </div>
+  <p style="margin-top:1rem; font-size:13px;">
+    Note how B2 (lip rounding) begins rising during /t/ — the tongue is already anticipating the postalveolar
+    configuration of the affricate /tʃ/. This anticipatory coarticulation is not encoded in the IPA phoneme
+    targets but emerges from the learned temporal model trained on EMA data.
+  </p>
+</div>
+
+<!-- SECTION 7: COMPARISON -->
+<div class="section">
+  <div class="section-label">§7 — Comparison</div>
+  <h2>ARIA vs. existing systems</h2>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:240px">Property</th>
+        <th>Viseme (14–21)</th>
+        <th>ARKit 52</th>
+        <th>MetaHuman 135</th>
+        <th class="col-aria-h">ARIA 48 ★</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dimensionality</td>
+        <td>14–21 discrete classes</td>
+        <td>52 float channels</td>
+        <td>135 float channels</td>
+        <td class="col-aria">48 structured channels</td>
+      </tr>
+      <tr>
+        <td>Language independence</td>
+        <td class="cross">✗ English-centric</td>
+        <td class="partial">~ Device-calibrated</td>
+        <td class="partial">~ English/EU bias</td>
+        <td class="col-aria check">✓ IPA universal</td>
+      </tr>
+      <tr>
+        <td>IPA alignment</td>
+        <td class="cross">✗ Lossy grouping</td>
+        <td class="cross">✗ None</td>
+        <td class="cross">✗ None</td>
+        <td class="col-aria check">✓ Native mapping</td>
+      </tr>
+      <tr>
+        <td>Tongue representation</td>
+        <td class="cross">✗ Implicit / ignored</td>
+        <td class="cross">✗ Not modeled</td>
+        <td class="partial">~ Partial (2–3 curves)</td>
+        <td class="col-aria check">✓ 8 dedicated channels</td>
+      </tr>
+      <tr>
+        <td>Speech / expression separation</td>
+        <td class="cross">✗ No expression</td>
+        <td class="cross">✗ Entangled</td>
+        <td class="cross">✗ Entangled</td>
+        <td class="col-aria check">✓ Groups A–E vs F–G</td>
+      </tr>
+      <tr>
+        <td>Audio-driven inferability</td>
+        <td class="check">✓ Trivial</td>
+        <td class="partial">~ Partial (head tracking needed)</td>
+        <td class="cross">✗ Underdetermined</td>
+        <td class="col-aria check">✓ Groups A–E inferable</td>
+      </tr>
+      <tr>
+        <td>Supports retroflex phonemes</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="col-aria check">✓ C8 dedicated</td>
+      </tr>
+      <tr>
+        <td>Supports ATR distinction</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="col-aria check">✓ C6 dedicated</td>
+      </tr>
+      <tr>
+        <td>Coarticulation model</td>
+        <td class="cross">✗ Discrete blending</td>
+        <td class="partial">~ Linear interpolation</td>
+        <td class="partial">~ Performance driven</td>
+        <td class="col-aria check">✓ Physics + learned Transformer</td>
+      </tr>
+      <tr>
+        <td>Interpretability</td>
+        <td class="check">✓ High (class labels)</td>
+        <td class="partial">~ Medium</td>
+        <td class="partial">~ Medium</td>
+        <td class="col-aria check">✓ Full semantic channels</td>
+      </tr>
+      <tr>
+        <td>Custom rig generalization</td>
+        <td class="partial">~ Via viseme-to-rig maps</td>
+        <td class="cross">✗ Apple-specific</td>
+        <td class="cross">✗ MetaHuman-specific</td>
+        <td class="col-aria check">✓ Semantic binding files</td>
+      </tr>
+      <tr>
+        <td>Non-human characters</td>
+        <td class="partial">~ Limited</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="col-aria check">✓ Subset binding</td>
+      </tr>
+      <tr>
+        <td>Information loss vs. full speech</td>
+        <td class="cross">✗ Very high (~70%)</td>
+        <td class="partial">~ Medium (~35%)</td>
+        <td class="check">✓ Low (~5%)</td>
+        <td class="col-aria check">✓ Low (~8% speech, 0% structured)</td>
+      </tr>
+      <tr>
+        <td>Real-time inference cost</td>
+        <td class="check">✓ Trivial</td>
+        <td class="check">✓ Low</td>
+        <td class="cross">✗ High (regression)</td>
+        <td class="col-aria check">✓ ~1.2ms GPU</td>
+      </tr>
+      <tr>
+        <td>ML training target quality</td>
+        <td class="cross">✗ Very poor</td>
+        <td class="partial">~ Moderate</td>
+        <td class="partial">~ Good but noisy</td>
+        <td class="col-aria check">✓ Structured + interpretable</td>
+      </tr>
+      <tr>
+        <td>Suitable for TTS integration</td>
+        <td class="check">✓</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="col-aria check">✓ Native (phoneme-aligned)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 8: MULTIMODAL INTEGRATION -->
+<div class="section">
+  <div class="section-label">§8 — Multimodal Integration</div>
+  <h2>Driving ARIA from any modality</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+    <div class="concept-box teal" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--teal)">Audio → ARIA (A2F)</h3>
+      <p style="font-size:13px;">
+        A conformer-based encoder produces a 30-dim speech latent per frame. A lightweight regression head maps
+        this to Groups A–E (30 channels). Groups F–G are either zeroed (neutral) or driven by a separate
+        prosody/emotion classifier. The system operates at 50 fps with 20ms latency — suitable for real-time dubbing.
+        Training data: paired audio + EMA/video at 100k+ utterances.
+      </p>
+    </div>
+    <div class="concept-box amber" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--amber)">Text → ARIA (TTS/T2M)</h3>
+      <p style="font-size:13px;">
+        G2P pipeline produces IPA transcription → phoneme-aligned ARIA targets via Mapping A.
+        Duration model predicts per-phoneme timing. Temporal model smooths targets to continuous signal.
+        This path is fully language-agnostic: any language with an IPA description can be animated
+        without new training data — just a G2P model and the phoneme feature table.
+      </p>
+    </div>
+    <div class="concept-box purple" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--purple)">Emotion control</h3>
+      <p style="font-size:13px;">
+        Emotion signals (from sentiment analysis, explicit labels, or performance capture) drive Groups F and G
+        independently of speech. ARIA allows <em>additive composition</em>: phoneme ARIA + emotion ARIA + 
+        secondary motion ARIA, each produced by separate models, summed with clamping. This decomposition
+        makes it straightforward to animate a character saying /i/ while angry vs. while sad.
+      </p>
+    </div>
+    <div class="concept-box coral" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--coral)">Cross-lingual transfer</h3>
+      <p style="font-size:13px;">
+        Because ARIA is grounded in articulatory phonetics, a model trained on English phoneme data can animate
+        Hindi retroflex stops (C8) or Zulu clicks — as long as the IPA description is available.
+        Only the temporal model needs fine-tuning per language family (typically &lt; 1,000 utterances).
+        The deterministic IPA → ARIA core requires no training at all for new languages.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 9: SCALABILITY -->
+<div class="section">
+  <div class="section-label">§9 — Scalability &amp; Topology Independence</div>
+  <h2>Scaling to diverse characters</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+    <div class="concept-box teal" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--teal);">Realistic humans</h3>
+      <p style="font-size:13px;">Full 48-channel ARIA. All groups active. Mapping B to MetaHuman 135. Training on video datasets (LRS3, VoxCeleb2, HDTF) with pseudo-labels from EMA+ARKit.</p>
+    </div>
+    <div class="concept-box amber" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--amber);">Stylized / Pixar-style</h3>
+      <p style="font-size:13px;">Groups A–F, skip C6–C8 (internal tongue not visible). Scale factors in binding file amplify B1/B2 by 1.5–2× for cartoony exaggeration. G1 skin tension disabled (no soft tissue sim).</p>
+    </div>
+    <div class="concept-box coral" style="margin-bottom:0">
+      <h3 style="margin-top:0; color:var(--coral);">Non-human anatomy</h3>
+      <p style="font-size:13px;">Bird beak: bind A1 to beak aperture only. No B, C, D channels. Creature with no lips: Groups C, D, E active; Group B zeroed or remapped to muzzle controls. Robot: simplified A1, E1, binary.</p>
+    </div>
+  </div>
+
+  <p>
+    The binding file architecture means that <strong>ARIA never fails for missing anatomy</strong> — the
+    upstream model always produces all 48 values, but the rig driver simply ignores channels with no binding.
+    This is fundamentally different from MetaHuman's approach where the entire rig is tightly coupled to
+    specific anatomical topology.
+  </p>
+</div>
+
+<!-- SECTION 10: PROS / CONS / LIMITATIONS -->
+<div class="section">
+  <div class="section-label">§10 — Assessment</div>
+  <h2>Strengths, weaknesses, and limitations</h2>
+
+  <div class="pros-cons-grid">
+    <div class="pc-card pros">
+      <div class="pc-title" style="color:var(--green)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor" stroke-width="1"/><path d="M4 7l2.2 2.5L10 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Strengths
+      </div>
+      <ul class="pc-list">
+        <li><span class="pc-dot"></span>Truly language-agnostic: any IPA-described language animates via the deterministic Mapping A without additional training</li>
+        <li><span class="pc-dot"></span>Fully interpretable: every channel has a named articulatory meaning, enabling manual override, debugging, and artistic control</li>
+        <li><span class="pc-dot"></span>Separates speech from expression, allowing independent ML pipelines for each</li>
+        <li><span class="pc-dot"></span>64% channel reduction from 135 with &lt; 8% speech information loss</li>
+        <li><span class="pc-dot"></span>ATR and retroflex channels cover language families invisible to all current commercial systems</li>
+        <li><span class="pc-dot"></span>Real-time capable at ~1.2ms GPU per frame</li>
+        <li><span class="pc-dot"></span>Graceful degradation for non-standard anatomy via binding files</li>
+        <li><span class="pc-dot"></span>Additive composition: speech + emotion + secondary motion can be produced by independent models</li>
+      </ul>
+    </div>
+    <div class="pc-card cons">
+      <div class="pc-title" style="color:var(--coral)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor" stroke-width="1"/><path d="M4.5 4.5l5 5M9.5 4.5l-5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Weaknesses
+      </div>
+      <ul class="pc-list">
+        <li><span class="pc-dot"></span>Tongue channels (C1–C8) cannot be directly observed from audio; they must be inferred, introducing uncertainty for fine-grained tongue positioning</li>
+        <li><span class="pc-dot"></span>Groups F–G (expression, secondary) are NOT inferrable from audio — separate signal required</li>
+        <li><span class="pc-dot"></span>The learned language residual in Mapping A requires per-language fine-tuning data (&gt; 500 utterances ideal)</li>
+        <li><span class="pc-dot"></span>Mapping B (ARIA → MetaHuman) must be re-trained when MetaHuman's rig version changes</li>
+        <li><span class="pc-dot"></span>48 channels is still complex for very simple use cases (e.g. looping idle talk animations)</li>
+        <li><span class="pc-dot"></span>Pharyngeal articulation channels (D2) lack good training data in most public corpora</li>
+      </ul>
+    </div>
+    <div class="pc-card limits">
+      <div class="pc-title" style="color:var(--amber)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor" stroke-width="1"/><path d="M7 4.5v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Limitations
+      </div>
+      <ul class="pc-list">
+        <li><span class="pc-dot"></span><strong>Clicks and ejectives</strong>: ingressive airflow phonemes (Khoisan, Zulu clicks) require extending E-group with an airflow direction channel not currently included</li>
+        <li><span class="pc-dot"></span><strong>Tone and prosody</strong>: ARIA encodes instant articulation, not F0 contour. Tonal language animation (Mandarin tones, Yoruba tones) needs a separate prosody-to-motion model driving head and brow channels</li>
+        <li><span class="pc-dot"></span><strong>Eye gaze and microexpressions</strong>: deliberately excluded — these belong to a separate head motion module</li>
+        <li><span class="pc-dot"></span><strong>Polyphony</strong> (e.g., throat singing / overtone singing) is not representable in a single ARIA vector</li>
+        <li><span class="pc-dot"></span>No ground-truth ARIA-labeled dataset exists yet — bootstrap requires pseudo-labeling from EMA + 3D video</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 11: IMPLEMENTATION ROADMAP -->
+<div class="section">
+  <div class="section-label">§11 — Implementation Roadmap</div>
+  <h2>From specification to standard</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+    <div class="concept-box teal" style="margin-bottom:0; padding:1rem">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--teal); margin-bottom:6px; letter-spacing:.1em">PHASE 1</div>
+      <div style="font-size:13px; font-weight:500; color:var(--text); margin-bottom:6px">Grounding</div>
+      <p style="font-size:12px; margin-bottom:0">Build IPA → ARIA deterministic table. Validate on 20 language families using phoneticians. Fit Mapping B to MetaHuman via paired studio data.</p>
+    </div>
+    <div class="concept-box amber" style="margin-bottom:0; padding:1rem">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--amber); margin-bottom:6px; letter-spacing:.1em">PHASE 2</div>
+      <div style="font-size:13px; font-weight:500; color:var(--text); margin-bottom:6px">Training</div>
+      <p style="font-size:12px; margin-bottom:0">Pseudo-label 100k video corpus with ARIA targets. Train A2F encoder + temporal model. Evaluate coarticulation quality vs. human EMA ground truth.</p>
+    </div>
+    <div class="concept-box purple" style="margin-bottom:0; padding:1rem">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--purple); margin-bottom:6px; letter-spacing:.1em">PHASE 3</div>
+      <div style="font-size:13px; font-weight:500; color:var(--text); margin-bottom:6px">Integration</div>
+      <p style="font-size:12px; margin-bottom:0">Release open-source ARIA runtime. Ship binding file spec. Partner with 3–5 game/film studios for pilot. Publish ARIA benchmark dataset.</p>
+    </div>
+    <div class="concept-box coral" style="margin-bottom:0; padding:1rem">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--coral); margin-bottom:6px; letter-spacing:.1em">PHASE 4</div>
+      <div style="font-size:13px; font-weight:500; color:var(--text); margin-bottom:6px">Standardization</div>
+      <p style="font-size:12px; margin-bottom:0">Propose as ISO/W3C spec via industry working group. Integrate with USD (Universal Scene Description) as a first-class face animation schema.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-meta">
+    <div class="footer-title">ARIA</div>
+    <div class="footer-sub">Articulatory Rig-Independent Animation Metric — v1.0 Specification</div>
+    <div class="footer-sub" style="margin-top:4px; color:var(--dim)">48 channels · 7 groups · IPA-aligned · Real-time capable</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-family:var(--mono); font-size:10px; color:var(--dim); line-height:2">
+      <div>Groups A–E: phoneme articulation (30 ch)</div>
+      <div>Group F: expression &amp; affect (10 ch)</div>
+      <div>Group G: secondary &amp; micro (8 ch)</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
